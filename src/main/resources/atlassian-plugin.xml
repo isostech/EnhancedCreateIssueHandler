@@ -1,0 +1,25 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    </plugin-info>
+    <resource type="i18n" name="i18n" location="com.isostech.jira.mailhandler.messages"/>
+    <component key="project-key-validator" class="com.isostech.jira.mailhandler.ProjectKeyValidator"/>
+
+    <message-handler i18n-name-key="isosmailhandler.name"
+            key="mailHandler" class="com.isostech.jira.mailhandler.ExtendedCreateIssueHandler"
+            add-edit-url="/secure/admin/EditExtendedCreateIssueHandlerDetails!default.jspa"
+            weight="0"/>
+
+    <webwork1 key="actions" name="Actions" class="java.lang.Object">
+        <actions>
+            <action name="com.isostech.jira.mailhandler.EditExtendedCreateIssueHandlerDetailsWebAction"
+                    alias="EditExtendedCreateIssueHandlerDetails"
+                    roles-required="admin">
+                <view name="input">/view/editExtendedCreateIssueHandlerDetails.vm</view>
+                <view name="securitybreach">/secure/views/securitybreach.jsp</view>
+            </action>
+        </actions>
+    </webwork1>
+</atlassian-plugin>
