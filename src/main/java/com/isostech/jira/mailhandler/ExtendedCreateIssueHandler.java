@@ -53,7 +53,8 @@ public class ExtendedCreateIssueHandler implements MessageHandler {
 	private String issueType = null;
 	private String configuredSubject = null;
 	private String configuredReporter = null;
-
+	private Map<String, String> handlerParams = null;
+	 
 	private String defaultSubject = "NO SUBJECT";
 	private String defaultReporter = "admin";
 	private final ProjectKeyValidator projectKeyValidator;
@@ -80,7 +81,8 @@ public class ExtendedCreateIssueHandler implements MessageHandler {
 	@Override
 	public void init(Map<String, String> params,
 			MessageHandlerErrorCollector monitor) {
-
+		handlerParams = params;
+		
 		projectKey = params.get(KEY_PROJECT_KEY);
 		if (StringUtils.isBlank(projectKey)) {
 			// this message will be either logged or displayed to the user (if
@@ -245,10 +247,8 @@ public class ExtendedCreateIssueHandler implements MessageHandler {
 
 		CreateIssueHandler cih = new CreateIssueHandler();
 		Map<String, String> params = new HashMap<String, String>();
-		params.put(CreateIssueHandler.KEY_PROJECT, projectKey);
-		params.put(CreateIssueHandler.KEY_ISSUETYPE, issueType);
-		params.put(AbstractMessageHandler.KEY_REPORTER, reporter);
-		cih.init(params, context.getMonitor());
+
+		cih.init(handlerParams, context.getMonitor());
 		return cih.handleMessage(message, context);
 
 	}

@@ -1,7 +1,7 @@
 package com.isostech.jira.mailhandler;
 
 import com.atlassian.configurable.ObjectConfigurationException;
-
+import java.util.HashMap;
 import com.atlassian.jira.issue.fields.config.manager.IssueTypeSchemeManager;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.issuetype.IssueType;
@@ -17,6 +17,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.atlassian.jira.plugins.mail.handlers.AbstractMessageHandler;
+import com.atlassian.jira.plugins.mail.handlers.CreateIssueHandler;
+import com.atlassian.jira.plugins.mail.handlers.RegexCommentHandler;
 import com.atlassian.jira.plugins.mail.HandlerDetailsValidator;
 import com.isostech.jira.plugins.mail.model.HandlerDetailsModel;
 import com.atlassian.jira.plugins.mail.model.IssueTypeModel;
@@ -27,6 +29,8 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +77,13 @@ public class EditExtendedCreateIssueHandlerDetailsWebAction extends
 	private String project;
 	private String subject;
 	private String reporterusername;
+	private String catchemail;
+	private String bulk;
+	private String forwardEmail;
+	private boolean createusers;
+	private boolean notifyusers;
+	private boolean ccwatcher;
+	private boolean ccassignee = CreateIssueHandler.DEFAULT_CC_ASSIGNEE;
 
 	public EditExtendedCreateIssueHandlerDetailsWebAction(
 			IssueTypeSchemeManager issueTypeSchemeManager,
@@ -134,6 +145,62 @@ public class EditExtendedCreateIssueHandlerDetailsWebAction extends
 		return projectKeyValidator;
 	}
 
+	public String getCatchemail() {
+		return catchemail;
+	}
+
+	public void setCatchemail(String catchemail) {
+		this.catchemail = catchemail;
+	}
+
+	public String getBulk() {
+		return bulk;
+	}
+
+	public void setBulk(String bulk) {
+		this.bulk = bulk;
+	}
+
+	public String getForwardEmail() {
+		return forwardEmail;
+	}
+
+	public void setForwardEmail(String forwardEmail) {
+		this.forwardEmail = forwardEmail;
+	}
+
+	public boolean isCreateusers() {
+		return createusers;
+	}
+
+	public void setCreateusers(boolean createusers) {
+		this.createusers = createusers;
+	}
+
+	public boolean isNotifyusers() {
+		return notifyusers;
+	}
+
+	public void setNotifyusers(boolean notifyusers) {
+		this.notifyusers = notifyusers;
+	}
+
+	public boolean isCcwatcher() {
+		return ccwatcher;
+	}
+
+	public void setCcwatcher(boolean ccwatcher) {
+		this.ccwatcher = ccwatcher;
+	}
+
+	public boolean isCcassignee() {
+		return ccassignee;
+	}
+
+	public void setCcassignee(boolean ccassignee) {
+		this.ccassignee = ccassignee;
+	}
+
 	// this method is called to let us populate our variables (or action state)
 	// with current handler settings
 	// managed by associated service (file or mail).
@@ -150,15 +217,36 @@ public class EditExtendedCreateIssueHandlerDetailsWebAction extends
 		subject = parameterMap.get(ExtendedCreateIssueHandler.KEY_SUBJECT);
 		reporterusername = parameterMap
 				.get(ExtendedCreateIssueHandler.KEY_REPORTER);
+		catchemail = parameterMap.get(AbstractMessageHandler.KEY_CATCHEMAIL);
+		bulk = parameterMap.get(AbstractMessageHandler.KEY_BULK);
+		createusers = Boolean.parseBoolean(parameterMap
+				.get(AbstractMessageHandler.KEY_CREATEUSERS));
+		notifyusers = Boolean.parseBoolean(parameterMap
+				.get(AbstractMessageHandler.KEY_NOTIFYUSERS));
+		ccwatcher = Boolean.parseBoolean(parameterMap
+				.get(CreateIssueHandler.CC_WATCHER));
+		ccassignee = Boolean.parseBoolean(parameterMap
+				.get(CreateIssueHandler.CC_ASSIGNEE));
 	}
 
 	@Override
 	protected Map<String, String> getHandlerParams() {
 
-		return MapBuilder.build(ExtendedCreateIssueHandler.KEY_ISSUE_TYPE,
-				issuetype, ExtendedCreateIssueHandler.KEY_PROJECT_KEY, project,
-				ExtendedCreateIssueHandler.KEY_SUBJECT, subject,
-				ExtendedCreateIssueHandler.KEY_REPORTER, reporterusername);
+		Map<String, String> aMap = new HashMap<String, String>();
+		aMap.put(ExtendedCreateIssueHandler.KEY_ISSUE_TYPE, issuetype);
+		aMap.put(ExtendedCreateIssueHandler.KEY_PROJECT_KEY, project);
+
+		aMap.put(ExtendedCreateIssueHandler.KEY_SUBJECT, subject);
+		aMap.put(ExtendedCreateIssueHandler.KEY_REPORTER, reporterusername);
+		aMap.put(AbstractMessageHandler.KEY_CATCHEMAIL, catchemail);
+		aMap.put(AbstractMessageHandler.KEY_BULK, bulk);
+		aMap.put(AbstractMessageHandler.KEY_CREATEUSERS,
+				String.valueOf(createusers));
+		aMap.put(AbstractMessageHandler.KEY_NOTIFYUSERS,
+				String.valueOf(notifyusers));
+		aMap.put(CreateIssueHandler.CC_WATCHER, String.valueOf(ccwatcher));
+		aMap.put(CreateIssueHandler.CC_ASSIGNEE, String.valueOf(ccassignee));
+		return aMap;
 	}
 
 	@Override
