@@ -1,0 +1,67 @@
+{namespace JIRA.Templates.Mail}
+
+/**
+* Renders the form for adding custom logger
+* @param data TestResultModel
+*/
+{template .testDialog}
+{if $data == undefined or $data.succeeded == undefined}
+    {call JIRA.Templates.infoMsg}
+        {param msg}
+            {getText('jmp.editHandlerDetails.testDialog.no.results')}
+        {/param}
+    {/call}
+{else}
+    <h2 class="aui-popup-heading">{getText('jmp.editHandlerDetails.testDialog.title')}</h2>
+{/if}
+
+<div class="summary">
+{if $data.stats and $data.stats.messages > 0}
+<p>{getText('jmp.editHandlerDetails.testDialog.summary')}</p>
+<ul>
+    {if $data.stats.messages == 1}
+        <li>{getText('jmp.editHandlerDetails.testDialog.message', $data.stats.messages)}</li>
+    {else}
+        <li>{getText('jmp.editHandlerDetails.testDialog.messages', $data.stats.messages)}</li>
+    {/if}
+    {if $data.stats.messagesRejected == 1}
+        <li>{getText('jmp.editHandlerDetails.testDialog.messageRejected', $data.stats.messagesRejected)}</li>
+    {elseif $data.stats.messagesRejected > 0}
+        <li>{getText('jmp.editHandlerDetails.testDialog.messagesRejected', $data.stats.messagesRejected)}</li>
+    {/if}
+    {if $data.stats.usersCreated == 1}
+        <li>{getText('jmp.editHandlerDetails.testDialog.user', $data.stats.usersCreated)}</li>
+    {elseif $data.stats.usersCreated > 0}
+        <li>{getText('jmp.editHandlerDetails.testDialog.users', $data.stats.usersCreated)}</li>
+    {/if}
+    {if $data.stats.issuesCreated == 1}
+        <li>{getText('jmp.editHandlerDetails.testDialog.issue', $data.stats.issuesCreated)}</li>
+    {elseif $data.stats.issuesCreated > 0}
+        <li>{getText('jmp.editHandlerDetails.testDialog.issues', $data.stats.issuesCreated)}</li>
+    {/if}
+    {if $data.stats.commentsCreated == 1}
+        <li>{getText('jmp.editHandlerDetails.testDialog.comment', $data.stats.commentsCreated)}</li>
+    {elseif $data.stats.commentsCreated > 0}
+        <li>{getText('jmp.editHandlerDetails.testDialog.comments', $data.stats.commentsCreated)}</li>
+    {/if}
+    {if $data.stats.attachmentsCreated == 1}
+        <li>{getText('jmp.editHandlerDetails.testDialog.attachment', $data.stats.attachmentsCreated)}</li>
+    {elseif $data.stats.attachmentsCreated > 0}
+        <li>{getText('jmp.editHandlerDetails.testDialog.attachments', $data.stats.attachmentsCreated)}</li>
+    {/if}
+</ul>
+{/if}
+{if $data.succeeded and $data.stats.messages == 0}
+    <p>
+        {getText('jmp.editHandlerDetails.testDialog.noemails')}
+    </p>
+{/if}
+{if $data.dryRunMessages and $data.dryRunMessages.length> 0}
+    <div class="dryRunLog">
+        {foreach $message in $data.dryRunMessages}
+            {$message}<br>
+        {/foreach}
+     </div>
+{/if}
+</div>
+{/template}

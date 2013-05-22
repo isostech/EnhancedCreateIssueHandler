@@ -1,0 +1,12 @@
+#disable_html_escaping()
+#if (!$auiparams.required)
+    #set ($auiparams.required = false)
+#end
+#if (!$auiparams.id)
+    #set ($auiparams.id = $auiparams.name.replace(".", "_"))
+#end
+#if ($auiparams.description)
+    #set ($auiparams.description = $i18n.getText($auiparams.description))
+#else
+    #set ($auiparams.description = "")
+#end

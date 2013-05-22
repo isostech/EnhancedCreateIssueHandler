@@ -1,0 +1,11 @@
+#disable_html_escaping()
+    </span>
+#if ($action.getErrors().get($auiparams.name))
+	<div class="error">$textutils.htmlEncode($action.getErrors().get($auiparams.name))</div>
+#end
+
+#if ($auiparams.description)<div class="description">$auiparams.description</div>#end
+#if($auiparams.extrahtml)
+	$auiparams.extrahtml
+#end
+</div>

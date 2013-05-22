@@ -1,0 +1,13 @@
+#disable_html_escaping()
+#*
+# action
+# auiparams.name
+# auiparams.label2
+# auiparams.description
+# auiparams.value
+# auiparams.required
+*#
+#parse("/templates/formfields/aui.vm")
+#parse("/templates/formfields/normalHeader.vm")
+#parse("/templates/simple/checkbox.vm")
+#parse("/templates/formfields/normalFooter.vm")

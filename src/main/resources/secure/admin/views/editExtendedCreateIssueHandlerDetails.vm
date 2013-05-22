@@ -1,0 +1,107 @@
+#* @vtlvariable name="action" type="com.isostech.jira.mailhandler.EditExtendedCreateIssueHandlerDetailsWebAction" *#
+#set ($modifierKey = $action.browserUtils.getModifierKey())
+#set ($submitAccessKey = $i18n.getText('AUI.form.submit.button.accesskey'))
+#set ($submitTitle = $i18n.getText('AUI.form.submit.button.tooltip', [$submitAccessKey, $modifierKey]))
+
+#set ($cancelAccessKey = $i18n.getText('AUI.form.cancel.link.accesskey'))
+#set ($cancelTitle = $i18n.getText('AUI.form.cancel.link.tooltip', [$cancelAccessKey, $modifierKey]))
+<html>
+<head>
+    <title>$action.handlerName</title>
+     $webResourceManager.requireResource("com.isostech.jira-mail-plugin:isos-handler-details-page")
+</head>
+<body>
+    <form class="aui" action="EditExtendedCreateIssueHandlerDetails.jspa" method="POST" name="mailHandlerForm" id="mailHandlerForm">
+       <div class="form-body">
+            <h2>$action.handlerName</h2>
+
+            <input type="hidden" id="details" name="detailsJson">
+            #parse("/secure/admin/views/printGlobalErrors.vm")
+
+            <input type="hidden" name="atl_token" value="$atl_token">
+
+            #if ($action.createIssueHandlerSelected || $action.createOrCommentHandlerSelected || $action.enhancedCreateIssueHandlerSelected)
+                #set ($auiparams = $map.build("name", "project", "label", $action.fieldLabels.project))
+                #set ($auiparams.description = "jmp.editHandlerDetails.project.desc")
+                #parse("/templates/formfields/select.vm")
+
+                #set ($auiparams = $map.build("name", "issuetype", "label", $action.fieldLabels.issuetype))
+                #set ($auiparams.description = "jmp.editHandlerDetails.issuetype.desc")
+                #parse("/templates/formfields/select.vm")
+
+                #if ($action.createOrCommentHandlerSelected)
+                    #set ($auiparams = $map.build("name", "stripquotes", "label", $action.fieldLabels.stripquotes))
+                    #set ($auiparams.description = "jmp.editHandlerDetails.stripquotes.desc")
+                    #parse("/templates/formfields/checkbox.vm")
+                #end
+           
+            #set ($auiparams = $map.build("name", "subject", "label", $action.fieldLabels.subject))
+            #set ($auiparams.description = "jmp.editHandlerDetails.subject.desc")
+            #parse("/templates/formfields/textfield.vm")
+
+            #set ($auiparams = $map.build("name", "catchemail", "label", $action.fieldLabels.catchemail))
+            #set ($auiparams.description = "jmp.editHandlerDetails.catchemail.desc")
+            #parse("/templates/formfields/textfield.vm")
+
+            #set ($auiparams = $map.build("name", "bulk", "label",  $action.fieldLabels.bulk))
+            #set ($auiparams.description = "jmp.editHandlerDetails.bulk.desc")
+            #parse("/templates/formfields/select.vm")
+
+            #set ($auiparams = $map.build("name", "forwardEmail", "label", $action.fieldLabels.forwardEmail, 'required', true))
+            #parse("/templates/formfields/textfield.vm")
+
+            #set ($auiparams = $map.build("name", "createusers", "label", $action.fieldLabels.createusers))
+            #set ($auiparams.description = "jmp.editHandlerDetails.createusers.desc")
+            #parse("/templates/formfields/checkbox.vm")
+
+            #set ($auiparams = $map.build("name", "reporterusername", "label", $action.fieldLabels.reporterusername, "formname", "mailHandlerForm"))
+            #parse("/templates/formfields/userselect.vm")
+
+            #* should be visible only if createusers is checked *#
+            #set ($auiparams = $map.build("name", "notifyusers", "label", $action.fieldLabels.notifyusers))
+            #set ($auiparams.description = "jmp.editHandlerDetails.notifyusers.desc")
+            #parse("/templates/formfields/checkbox.vm")
+ 
+                #set ($auiparams = $map.build("name", "ccassignee", "label", $action.fieldLabels.ccassignee, "description", 'jmp.editHandlerDetails.ccassignee.desc'))
+                #parse("/templates/formfields/checkbox.vm")
+
+                #set ($auiparams = $map.build("name", "ccwatcher", "label", $action.fieldLabels.ccwatcher,  "description", 'jmp.editHandlerDetails.ccwatcher.desc'))
+                #parse("/templates/formfields/checkbox.vm")
+            #end
+        </div>
+
+        <div class="buttons-container form-footer">
+            <div class="hints-section" style="display: none;">
+                <p>
+                    $i18n.getText('jmp.editHandlerDetails.hints')
+                </p>
+                <p class="rejecting-messages-without-author">
+                    $i18n.getText('jmp.editHandlerDetails.rejecting.messages')
+                </p>
+            </div>
+            <div class="buttons">
+                <div class="test-placeholder"></div>
+                <span class="icon throbber"></span>
+ 
+                <input id="testButton" type="submit" disabled class="button" value="$i18n.getText('admin.common.words.test')">
+                #if ($action.editing)
+                    #set ($addButtonLabel = $i18n.getText('common.words.save'))
+                #else
+                    #set ($addButtonLabel = $i18n.getText('common.forms.add'))
+                #end
+                <input id="addButton" type="submit" class="button" value="$!addButtonLabel" accesskey="$submitAccessKey" title="$submitTitle">
+                <a href="IncomingMailServers.jspa" class="cancel" accesskey="$cancelAccessKey" title="$cancelTitle">$i18n.getText("AUI.form.cancel.link.text")</a>
+            </div>
+
+            <script type="text/javascript">
+                (function() {
+                    editHandlerDetailsBackbone($action.detailsJson.replace('</', '<\u002f'),
+                        $action.projectsJson.replace('</', '<\u002f'),
+                        $action.bulkOptionsJson.replace('</', '<\u002f'));
+                }());
+            </script>
+        </div>
+    </form>
+</body>
+</html>
+

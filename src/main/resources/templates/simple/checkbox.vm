@@ -1,0 +1,9 @@
+#disable_html_escaping()
+<input
+#if ($auiparams.id)
+	id="$!textutils.htmlEncode($auiparams.id)"
+#else
+	id="$!textutils.htmlEncode($auiparams.name)"
+#end
+#parse("/templates/simple/select.attrs.vm")
+type="checkbox" name="$!textutils.htmlEncode($!auiparams.name)" value="true" #if ($auiparams.value) CHECKED #end>

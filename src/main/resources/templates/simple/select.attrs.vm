@@ -1,0 +1,22 @@
+#disable_html_escaping()
+#if ($auiparams.disabled)
+    DISABLED
+#end
+#if ($auiparams.tabindex)
+    tabindex="$!textutils.htmlEncode($auiparams.tabindex.toString())"
+#end
+#if ($auiparams.onchange)
+    onchange="$auiparams.onchange"
+#end
+#if ($auiparams.onclick)
+    onclick="$auiparams.onclick"
+#end
+#if ($auiparams.style)
+    style="$!textutils.htmlEncode($auiparams.style)"
+#end
+#if ($auiparams.get('class'))
+    class="$!textutils.htmlEncode($auiparams.get('class'))"
+#end
+#if ($auiparams.size)
+    size="$!textutils.htmlEncode($auiparams.size.toString())"
+#end

@@ -1,0 +1,37 @@
+#disable_html_escaping()
+<select name="$!textutils.htmlEncode($auiparams.name)"
+    #if ($auiparams.id)
+        id="$!textutils.htmlEncode($auiparams.id)"
+    #else
+        id="$!textutils.htmlEncode($auiparams.name)"
+    #end
+    #parse("/templates/simple/select.attrs.vm")
+>
+   #if ($auiparams.headeroptgroup)
+      <optgroup label="$!textutils.htmlEncode($auiparams.headeroptgroup)">
+   #end
+
+    #if ($auiparams.headerrow)
+        <option value="$!textutils.htmlEncode($auiparams.headervalue)" #if ($auiparams.value && $auiparams.headervalue == $auiparams.value) SELECTED #end>$!textutils.htmlEncode($auiparams.headerrow)</option>
+    #end
+
+    #if ($auiparams.headerrow2)
+        <option value="$!textutils.htmlEncode($auiparams.headervalue2)" #if ($auiparams.value && $auiparams.headervalue2 == $auiparams.value) SELECTED #end>$!textutils.htmlEncode($auiparams.headerrow2)</option>
+    #end
+
+    #if ($auiparams.map)
+        #foreach ($entry in $auiparams.map.entrySet())
+            <option value="$textutils.htmlEncode($!entry.key)" #if ($auiparams.value && $entry.key == $auiparams.value) SELECTED #end>$!textutils.htmlEncode($!entry.value)</option>
+        #end
+    #end
+
+    #if ($auiparams.optgroups)
+        #foreach ($optgroup in $auiparams.optgroups.entrySet())
+            <optgroup label="$!textutils.htmlEncode($optgroup.key)">
+            #foreach ($option in $optgroup.value.entrySet())
+                <option value="$textutils.htmlEncode($!option.key)" #if ($auiparams.value && $option.key == $auiparams.value) SELECTED #end>$!textutils.htmlEncode($!option.value)</option>
+            #end
+            </optgroup>
+        #end
+    #end
+</select>

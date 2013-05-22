@@ -1,0 +1,8 @@
+#disable_html_escaping()
+#parse("/templates/formfields/aui.vm")
+#parse("/templates/formfields/normalHeader.vm")
+#if (!$auiparams.containsKey('class'))
+	#set ($auiparams.class = "text")
+#end
+#parse("/templates/simple/textfield.vm")
+#parse("/templates/formfields/normalFooter.vm")

@@ -1,0 +1,19 @@
+#disable_html_escaping()
+<input type=#if ($auiparams.password)"password"#else"text"#end
+	#if ($auiparams.id)
+		id="$!textutils.htmlEncode($auiparams.id)"
+	#else
+		id="$!textutils.htmlEncode($auiparams.name)"
+	#end
+	#parse("/templates/simple/select.attrs.vm")
+	   name="$!textutils.htmlEncode($auiparams.name)" value="$!textutils.htmlEncode($auiparams.value)"
+   #if ($auiparams.size)
+       size="$!textutils.htmlEncode($auiparams.size.toString())"
+   #end
+   #if ($auiparams.title)
+       title="$!textutils.htmlEncode($auiparams.title)"
+   #end
+	#if ($auiparams.autocomplete && $auiparams.autocomplete == true)
+		autocomplete="on"
+	#end
+>

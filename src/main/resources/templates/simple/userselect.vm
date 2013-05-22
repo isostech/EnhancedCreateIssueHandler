@@ -1,0 +1,129 @@
+#disable_html_escaping()
+#* @vtlvariable name="action" type="com.atlassian.jira.plugins.mail.webwork.MailWebActionSupport" *#
+#*--
+-- userselect.jsp
+--
+-- Required Parameters:
+--   * label      - The description that will be used to identfy the control.
+--   * name       - The name of the attribute to put and pull the result from.
+--   * formname   - The name of the form on which the control is to be placed. This is so the value can be returned
+--   * userMode   - What mode of users should be returned. 1 = All users 2= Assignable Users etc
+
+-- Optional Parameters:
+--   * imageName   - determines what the image of the userselect will be called
+
+--   * labelposition   - determines were the label will be place in relation
+--                       to the control.  Default is to the left of the control.
+--   * size       - SIZE parameter of the HTML INPUT tag.
+--   * maxlength  - MAXLENGTH parameter of the HTML INPUT tag.
+--   * disabled   - DISABLED parameter of the HTML INPUT tag.
+--   * readonly   - READONLY parameter of the HTML INPUT tag.
+--   * onkeyup    - onkeyup parameter of the HTML INPUT tag.
+--   * onfocus    - onfocus parameter of the HTML INPUT tag.
+--   * onchange  - onkeyup parameter of the HTML INPUT tag.
+--   * tabindex  - tabindex parameter of the HTML INPUT tag.
+--*#
+
+#*--  Multi-Select User Picker
+
+  -- set parameter 'multiSelect' to true to enable multi-select
+
+  -- Required Parameters:
+  --   * col      - The textarea number of columns to display.
+  --   * row       - The textarea number of rows to display.
+  --   * name   - The name of the form on which the control is to be placed. This is so the value can be returned
+  --   * formname   - The name of the form on which the control is to be placed. This is so the value can be returned
+  --   * userMode   - What mode of users should be returned. 1 = All users 2= Assignable Users etc
+  --   * multiSelect   - Enables selection of multiple users
+--*#
+
+#if (!$textutils.stringSet($auiparams.id))
+    #set ($id = $auiparams.name.replace(".", "_"))
+#else
+    #set ($id = $auiparams.id)
+#end
+
+<fieldset rel="$!textutils.htmlEncode($auiparams.name)" class="hidden user-picker-params">
+    <input type="hidden" title="formName" value="$!textutils.htmlEncode($auiparams.formname)">
+    <input type="hidden" title="fieldName" value="$!textutils.htmlEncode($auiparams.name)">
+    <input type="hidden" title="fieldId" value="$!textutils.htmlEncode($id)">
+    <input type="hidden" title="multiSelect" #if ($auiparams.multiSelect) value="true" #else value="false" #end>
+    #if ($action.canPerformAjaxSearch())
+        <input type="hidden" title="userPickerEnabled" value="true">
+    #end
+</fieldset>
+
+<div class="ajax_autocomplete" id="$!textutils.htmlEncode(${id})_container">
+#if ($auiparams.multiSelect)
+    <textarea name="$!textutils.htmlEncode($auiparams.name)" cols="$!textutils.htmlEncode($auiparams.cols)" rows="$!textutils.htmlEncode($auiparams.rows)" id="$!textutils.htmlEncode($id)"
+        #if ($auiparams.disabled)
+            DISABLED
+        #end
+        #if ($auiparams.readonly)
+            READONLY
+        #end
+    ></textarea>
+#else
+    <input type="text"
+           name="$!textutils.htmlEncode($auiparams.name)"
+           id="$id"
+           #if ($textutils.stringSet($auiparams.size))
+             size="$!textutils.htmlEncode($auiparams.size)"
+           #end
+           #if ($textutils.stringSet($auiparams.maxlength))
+             maxlength="$!textutils.htmlEncode($auiparams.maxlength)"
+           #end
+           #if ($textutils.stringSet($auiparams.value))
+               value="$!textutils.htmlEncode($auiparams.value)"
+           #end
+           #if ($auiparams.disabled)
+             DISABLED
+           #end
+           #if ($auiparams.readonly)
+             READONLY
+           #end
+           #if ($textutils.stringSet($auiparams.onkeyup))
+             onkeyup="$!textutils.htmlEncode($auiparams.onkeyup)"
+           #end
+           #if ($textutils.stringSet($auiparams.tabindex))
+             tabindex="$!textutils.htmlEncode($auiparams.tabindex)"
+           #end
+           #if ($textutils.stringSet($auiparams.onchange))
+             onchange="$!textutils.htmlEncode($auiparams.onchange)"
+           #end
+           #if ($textutils.stringSet($auiparams.onfocus))
+             onfocus="$!textutils.htmlEncode($auiparams.onfocus)"
+           #end
+           #if ($textutils.stringSet($auiparams.style))
+             style="$!textutils.htmlEncode($auiparams.style)"
+           #end
+           #if ($textutils.stringSet($auiparams.get('class')))
+             class="$!textutils.htmlEncode($auiparams.class)"
+           #end
+    />
+#end
+
+#if (!$auiparams.disabled)
+    #if ($action.isHasPermission('pickusers'))
+        <a class="popup-trigger" href="#">
+            <img
+            #if ($auiparams.multiSelect)
+                title="$i18n.getText('user.picker.select.users')" alt="$i18n.getText('user.picker.select.users')"
+            #else
+                title="$i18n.getText('user.picker.select.user')" alt="$i18n.getText('user.picker.select.user')"
+            #end
+            #if ($textutils.stringSet($auiparams.imageName))
+                name="$!textutils.htmlEncode($auiparams.imageName)"
+            #else
+                name="assigneeImage"
+            #end
+                src="$req.contextPath/images/icons/filter_public.gif" hspace="0" height="16" width="16" border="0" style="vertical-align:top"></a>
+    #else
+            <img title="$i18n.getText('user.picker.no.permission')" src="$req.contextPath/images/icons/userpicker_disabled.gif" hspace="0" height="16" width="16" border="0" alt="" style="vertical-align:top"/>
+    #end
+#end
+#if ($action.canPerformAjaxSearch())
+    <div id="$!textutils.htmlEncode(${id})_results" class="ajax_results"></div>
+    <div class="small">$i18n.getText('user.picker.ajax.desc')</div>
+#end
+</div>

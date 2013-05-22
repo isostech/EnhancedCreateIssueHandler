@@ -1,0 +1,13 @@
+#disable_html_escaping()
+#if ($!auiparams.controlHeaderClass)
+	#set ($controlHeaderClass = " ${auiparams.controlHeaderClass}")
+#else
+	#set ($controlHeaderClass = "")
+#end
+
+<div class="field-group$!{controlHeaderClass} $!auiparams.id">
+	<label for="$auiparams.id">
+		$i18n.getText($auiparams.label)
+		#if ($auiparams.required)<span class="aui-icon icon-required"></span><span class="content"> $action.getText("common.forms.requiredfields")</span>#end
+	</label>
+    <span class="element-wrapper">
