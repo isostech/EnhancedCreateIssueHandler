@@ -5,19 +5,42 @@
         <vendor name="${project.organization.name}" url="${project.organization.url}"/>
     </plugin-info>
     <resource type="i18n" name="i18n" location="com.isostech.jira.mailhandler.messages"/>
-    <component key="project-key-validator" class="com.isostech.jira.mailhandler.ProjectKeyValidator"/>
+   <component key="project-key-validator" class="com.isostech.jira.mailhandler.ProjectKeyValidator"/> 
 
     <message-handler i18n-name-key="isosmailhandler.name"
             key="mailHandler" class="com.isostech.jira.mailhandler.ExtendedCreateIssueHandler"
             add-edit-url="/secure/admin/EditExtendedCreateIssueHandlerDetails!default.jspa"
             weight="0"/>
 
+    <web-resource key="isos-handler-details-page">
+        <context>admin.mail.incoming</context>
+
+        <transformation extension="js">
+            <transformer key="jsI18n"/>
+        </transformation>
+
+        <transformation extension="soy">
+            <transformer key="soyTransformer"/>
+        </transformation>
+
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>jira.webresources:jira-global</dependency>
+        <dependency>jira.webresources:autocomplete</dependency>
+        <dependency>com.atlassian.jira.jira-mail-plugin:global-resources</dependency>
+
+        <resource type="download" name="edit-handler-details.js" location="javascript/edit-handler-details.js"/>
+
+        <resource type="download" name="edit-handler-details.css"
+                  location="css/edit-handler-details.css"/>
+
+    </web-resource>
+
     <webwork1 key="actions" name="Actions" class="java.lang.Object">
         <actions>
             <action name="com.isostech.jira.mailhandler.EditExtendedCreateIssueHandlerDetailsWebAction"
                     alias="EditExtendedCreateIssueHandlerDetails"
                     roles-required="admin">
-                <view name="input">/view/editExtendedCreateIssueHandlerDetails.vm</view>
+                <view name="input">/secure/admin/views/editExtendedCreateIssueHandlerDetails.vm</view> 
                 <view name="securitybreach">/secure/views/securitybreach.jsp</view>
             </action>
         </actions>
