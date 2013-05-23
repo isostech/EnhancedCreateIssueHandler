@@ -54,7 +54,7 @@ public class ExtendedCreateIssueHandler implements MessageHandler {
 	private String configuredSubject = null;
 	private String configuredReporter = null;
 	private Map<String, String> handlerParams = null;
-	 
+
 	private String defaultSubject = "NO SUBJECT";
 	private String defaultReporter = "admin";
 	private final ProjectKeyValidator projectKeyValidator;
@@ -73,7 +73,7 @@ public class ExtendedCreateIssueHandler implements MessageHandler {
 	public ExtendedCreateIssueHandler(
 			MessageUserProcessor messageUserProcessor,
 			ProjectKeyValidator projectKeyValidator) {
-	
+
 		this.messageUserProcessor = messageUserProcessor;
 		this.projectKeyValidator = projectKeyValidator;
 	}
@@ -82,7 +82,7 @@ public class ExtendedCreateIssueHandler implements MessageHandler {
 	public void init(Map<String, String> params,
 			MessageHandlerErrorCollector monitor) {
 		handlerParams = params;
-		
+
 		projectKey = params.get(KEY_PROJECT_KEY);
 		if (StringUtils.isBlank(projectKey)) {
 			// this message will be either logged or displayed to the user (if
@@ -173,25 +173,8 @@ public class ExtendedCreateIssueHandler implements MessageHandler {
 					fromName = frags[0];
 					fromEmail = frags[1];
 				}
+				body = getMessageBody(message);
 
-				Object content = message.getContent();
-				if (content != null) {
-
-					MimeMultipart msgBody = (MimeMultipart) content;
-					for (int i = 0; i < msgBody.getCount(); i++) {
-						MimeBodyPart bodyPart = (MimeBodyPart) msgBody
-								.getBodyPart(i);
-
-						if (i == 0) {
-							body = bodyPart.getContent().toString(); // text
-
-						}
-
-					}
-
-				} else {
-
-				}
 				if (subject == null || StringUtils.isBlank(subject)) {
 					if (configuredSubject != null)
 						subject = configuredSubject;
@@ -216,8 +199,9 @@ public class ExtendedCreateIssueHandler implements MessageHandler {
 					msg.setRecipients(Message.RecipientType.TO,
 							message.getRecipients(Message.RecipientType.TO));
 					Object p = message.getContent();
-
-					msg.setContent((Multipart) p);
+					if (p instanceof Multipart) {
+						msg.setContent((Multipart) p);
+					}
 					msg.addHeader("Content-Type", message.getContentType());
 
 					message = msg;
@@ -265,15 +249,19 @@ public class ExtendedCreateIssueHandler implements MessageHandler {
 		String body = null;
 
 		if (content != null) {
+			if (content instanceof String) {
+				body = (String) content;
+			} else if (content instanceof MimeMultipart) {
+				MimeMultipart msgBody = (MimeMultipart) content;
+				for (int i = 0; i < msgBody.getCount(); i++) {
+					MimeBodyPart bodyPart = (MimeBodyPart) msgBody
+							.getBodyPart(i);
 
-			MimeMultipart msgBody = (MimeMultipart) content;
-			for (int i = 0; i < msgBody.getCount(); i++) {
-				MimeBodyPart bodyPart = (MimeBodyPart) msgBody.getBodyPart(i);
+					if (i == 0) {
+						body = bodyPart.getContent().toString(); // text
 
-				if (i == 0) {
-					body = bodyPart.getContent().toString();
+					}
 				}
-
 			}
 
 		}

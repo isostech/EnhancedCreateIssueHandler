@@ -7,6 +7,9 @@
     <resource type="i18n" name="i18n" location="com.isostech.jira.mailhandler.messages"/>
    <component key="project-key-validator" class="com.isostech.jira.mailhandler.ProjectKeyValidator"/> 
 
+    <component key="details-validator"
+               class="com.atlassian.jira.plugins.mail.HandlerDetailsValidator"/>
+               
     <message-handler i18n-name-key="isosmailhandler.name"
             key="mailHandler" class="com.isostech.jira.mailhandler.ExtendedCreateIssueHandler"
             add-edit-url="/secure/admin/EditExtendedCreateIssueHandlerDetails!default.jspa"
