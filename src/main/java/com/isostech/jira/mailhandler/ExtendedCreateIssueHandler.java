@@ -1,45 +1,31 @@
 package com.isostech.jira.mailhandler;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
-import com.atlassian.jira.issue.issuetype.IssueType;
-import com.atlassian.jira.plugins.mail.handlers.AbstractMessageHandler;
-import com.atlassian.jira.plugins.mail.handlers.CreateIssueHandler;
+import java.util.Properties;
+
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.Part;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
-import java.util.Properties;
-import java.util.Collection;
-import java.util.Set;
-
-import java.util.HashMap;
-
 import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.component.ComponentAccessor;
-import com.atlassian.jira.issue.Issue;
-import com.atlassian.jira.issue.IssueFactory;
-import com.atlassian.jira.issue.IssueFieldConstants;
-import com.atlassian.jira.issue.IssueManager;
-import com.atlassian.jira.issue.MutableIssue;
+import com.atlassian.jira.issue.issuetype.IssueType;
+import com.atlassian.jira.plugins.mail.handlers.CreateIssueHandler;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
-import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.jira.service.util.handler.MessageHandler;
 import com.atlassian.jira.service.util.handler.MessageHandlerContext;
 import com.atlassian.jira.service.util.handler.MessageHandlerErrorCollector;
 import com.atlassian.jira.service.util.handler.MessageUserProcessor;
-import com.atlassian.mail.MailUtils;
 
 /**
  * Message handler to set subject on emails w/ no subject.
